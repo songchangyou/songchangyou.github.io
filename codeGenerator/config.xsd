@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.itqimeng.com/schema/codeGenerator"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		targetNamespace="http://www.itqimeng.com/schema/codeGenerator">
+	
+	<xsd:element name="configuration">
+		<xsd:annotation>
+				<xsd:documentation><![CDATA[
+					代码生成器根元素
+				]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="properties"></xsd:element>
+				<xsd:element ref="classPathEntry"></xsd:element>
+				<xsd:element ref="jdbcConnection"></xsd:element>
+				<xsd:element ref="templates"></xsd:element>
+			</xsd:all>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="property">
+		<xsd:annotation>
+				<xsd:documentation><![CDATA[
+					单个属性配置，例如
+						<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"></property>
+				]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
+			<xsd:attribute name="value" type="xsd:string" use="required"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="properties">
+		<xsd:annotation>
+				<xsd:documentation><![CDATA[
+					properties：属性配置，例如
+					<properties>
+						<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"></property>
+					</properties>
+				]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="property"></xsd:element>
+			</xsd:all>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="jdbcConnection">
+		<xsd:annotation>
+				<xsd:documentation><![CDATA[
+					数据库连接配置，例如
+						<jdbcConnection driverClass="${driverClass}" connectionURL="${connectionURL}" userId="${userName}" password="${password}" >
+							<property name="remarksReporting" value="true"/>
+						</jdbcConnection>
+				]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="property">
+					<xsd:annotation>
+						<xsd:documentation><![CDATA[
+							获取数据库连接时需要额外传入的数据：详情请参考java.sql.Driver的connect(String url, java.util.Properties info)
+						]]></xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:all>
+			<xsd:attribute name="driverClass" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						jdbc驱动类
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="connectionURL" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						数据库连接地址
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="userName" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						连接数据库的用户名
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="password" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						连接数据库的密码
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="classPathEntry">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				运行代码生成器所需要的额外的jar包，如Oracle数据库的jdbc驱动包：
+					<classPathEntry location="C:\Users\Administrator.SCY-PC\git\code-generator\lib\ojdbc14-10.2.0.4.0.jar"/>
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="location" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						jar包的位置
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="template">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				生成代码使用的单个freemarker模版，如：
+					<template overwrite="true" targetDirectory="D:/tmp/test/src/com/ydtf/service/impl" fileNamePrefix="" fileNameSuffix="ServiceImpl" tplFile="serviceImpl.ftl" fileType="java"></template>
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="overwrite" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						如果要生成的文件已经存在，是否覆盖，默认继承templates的overwrite
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="targetDirectory" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						存放生成文件的路径
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="fileNamePrefix" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						文件名前缀，文件名为：fileNamePrefix+类名+fileNameSuffix+"."+fileType，如PrefixClassNameSUffix.java
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="fileNameSuffix" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						文件名后缀，文件名为：fileNamePrefix+类名+fileNameSuffix+"."+fileType，如PrefixClassNameSUffix.java
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="fileType" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						文件类型，文件名为：fileNamePrefix+类名+fileNameSuffix+"."+fileType，如PrefixClassNameSUffix.java
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="tplFile" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						模版文件路径
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="templates">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				生成代码使用的freemarker模版
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			
+			<xsd:all>
+				<xsd:element ref="template"></xsd:element>
+			</xsd:all>
+			<xsd:attribute name="overwrite" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						如果要生成的文件已经存在，是否覆盖
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	
+	
+</xsd:schema>
