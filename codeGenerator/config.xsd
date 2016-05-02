@@ -15,6 +15,7 @@
 				<xsd:element ref="classPathEntry"></xsd:element>
 				<xsd:element ref="jdbcConnection"></xsd:element>
 				<xsd:element ref="templates"></xsd:element>
+				<xsd:element ref="tabels"></xsd:element>
 			</xsd:all>
 		</xsd:complexType>
 	</xsd:element>
@@ -190,6 +191,52 @@
 		</xsd:complexType>
 	</xsd:element>
 	
-	
+	<xsd:element name="tabels">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				数据库表相关配置，支持通配符,^:开头，$:结尾，.:单字符，*任一字符,如：
+				<tables schema="YNOMS" containsView="true" exclude="tsm*" tableName="BP_SYS_FUN"/>
+				如果包含在 exclude中，不生成
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="catalog" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						为java中DatabaseMetaData的getTables方法的参数
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="schema" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						为java中DatabaseMetaData的getTables方法的参数
+						schema oracle数据时为表用户
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="containsView" type="xsd:boolean" default="true">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						是否包含视图
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="exclude" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						排除的表，支持通配符
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="tableName" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						数据库中的表名，支持通配符
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
 	
 </xsd:schema>
