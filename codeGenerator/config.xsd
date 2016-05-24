@@ -147,6 +147,13 @@
 					]]></xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
+			<xsd:attribute name="packageName" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						java文件包名
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
 			<xsd:attribute name="targetDirectory" type="xsd:string" use="required">
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
