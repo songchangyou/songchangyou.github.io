@@ -10,15 +10,30 @@
 				]]></xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexType>
-			<xsd:all>
-				<xsd:element ref="properties"></xsd:element>
-				<xsd:element ref="classPathEntry"></xsd:element>
+			<xsd:sequence>
+				<xsd:element ref="propertiesholder" minOccurs="0"></xsd:element>
+				<xsd:element ref="properties" minOccurs="0"></xsd:element>
+				<xsd:element ref="classPathEntry" minOccurs="0"></xsd:element>
 				<xsd:element ref="jdbcConnection"></xsd:element>
-				<xsd:element ref="templates"></xsd:element>
-				<xsd:element ref="tabels"></xsd:element>
-			</xsd:all>
+				<xsd:element ref="templates" maxOccurs="1" minOccurs="1"></xsd:element>
+				<xsd:element ref="tables"></xsd:element>
+			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
+	
+	<xsd:element name="propertiesholder">
+		<xsd:annotation>
+				<xsd:documentation><![CDATA[
+					properties文件配置，例如
+						<propertiesholder location="classpath:application.properties"></propertiesholder>
+						<propertiesholder location="D:/application.properties"></propertiesholder>
+				]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="location" type="xsd:string" use="required"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
 	
 	<xsd:element name="property">
 		<xsd:annotation>
@@ -60,7 +75,7 @@
 		</xsd:annotation>
 		<xsd:complexType>
 			<xsd:all>
-				<xsd:element ref="property">
+				<xsd:element ref="property" minOccurs="0">
 					<xsd:annotation>
 						<xsd:documentation><![CDATA[
 							获取数据库连接时需要额外传入的数据：详情请参考java.sql.Driver的connect(String url, java.util.Properties info)
@@ -89,7 +104,7 @@
 					]]></xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="password" type="xsd:string" use="required">
+			<xsd:attribute name="password" type="xsd:string">
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
 						连接数据库的密码
@@ -153,7 +168,7 @@
 					]]></xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="fileType" type="xsd:string" use="required">
+			<xsd:attribute name="fileType" type="xsd:string">
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
 						文件类型，文件名为：fileNamePrefix+类名+fileNameSuffix+"."+fileType，如PrefixClassNameSUffix.java
@@ -181,7 +196,7 @@
 			<xsd:all>
 				<xsd:element ref="template"></xsd:element>
 			</xsd:all>
-			<xsd:attribute name="overwrite" type="xsd:boolean">
+			<xsd:attribute name="overwrite" type="xsd:boolean" default="false">
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
 						如果要生成的文件已经存在，是否覆盖
@@ -191,7 +206,7 @@
 		</xsd:complexType>
 	</xsd:element>
 	
-	<xsd:element name="tabels">
+	<xsd:element name="tables">
 		<xsd:annotation>
 			<xsd:documentation><![CDATA[
 				数据库表相关配置，支持通配符,^:开头，$:结尾，.:单字符，*任一字符,如：
@@ -211,11 +226,11 @@
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
 						为java中DatabaseMetaData的getTables方法的参数
-						schema oracle数据时为表用户
+						schema oracle数据库时为表用户
 					]]></xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="containsView" type="xsd:boolean" default="true">
+			<xsd:attribute name="containsView" type="xsd:boolean" default="false">
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
 						是否包含视图
@@ -233,6 +248,13 @@
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
 						数据库中的表名，支持通配符
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="skip" type="xsd:boolean" default="false">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						是否跳过，如果跳过，则不生成相关的表的内容，已经生成的代码，设置为true，避免重复生成
 					]]></xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
