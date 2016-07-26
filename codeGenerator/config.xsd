@@ -13,10 +13,12 @@
 			<xsd:sequence>
 				<xsd:element ref="propertiesholder" minOccurs="0"></xsd:element>
 				<xsd:element ref="properties" minOccurs="0"></xsd:element>
+				<xsd:element ref="tableNameConverter" maxOccurs="1" minOccurs="0"></xsd:element>
+				<xsd:element ref="tableFieldConverter" maxOccurs="1" minOccurs="0"></xsd:element>
 				<xsd:element ref="classPathEntry" minOccurs="0"></xsd:element>
 				<xsd:element ref="jdbcConnection"></xsd:element>
 				<xsd:element ref="templates" maxOccurs="1" minOccurs="1"></xsd:element>
-				<xsd:element ref="tables"></xsd:element>
+				<xsd:element ref="tables" maxOccurs="unbounded"></xsd:element>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
@@ -34,18 +36,22 @@
 		</xsd:complexType>
 	</xsd:element>
 	
-	
-	<xsd:element name="property">
+	<xsd:element name="tableNameConverter" type="xsd:string" 
+		default="com.itqimeng.codeGenerator.converter.impl.DatabaseTableNameToClassName">
 		<xsd:annotation>
-				<xsd:documentation><![CDATA[
-					单个属性配置，例如
-						<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"></property>
-				]]></xsd:documentation>
+			<xsd:documentation><![CDATA[
+				数据库表名转化函数，必须实现com.itqimeng.codeGenerator.converter.NameConverter接口
+			]]></xsd:documentation>
 		</xsd:annotation>
-		<xsd:complexType>
-			<xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
-			<xsd:attribute name="value" type="xsd:string" use="required"></xsd:attribute>
-		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="tableFieldConverter" type="xsd:string" 
+		default="com.itqimeng.codeGenerator.converter.impl.DatabaseFieldToProperty">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				数据库字段名转化函数，必须实现com.itqimeng.codeGenerator.converter.NameConverter接口
+			]]></xsd:documentation>
+		</xsd:annotation>
 	</xsd:element>
 	
 	<xsd:element name="properties">
@@ -61,6 +67,19 @@
 			<xsd:all>
 				<xsd:element ref="property"></xsd:element>
 			</xsd:all>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="property">
+		<xsd:annotation>
+				<xsd:documentation><![CDATA[
+					单个属性配置，例如
+						<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"></property>
+				]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
+			<xsd:attribute name="value" type="xsd:string" use="required"></xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>
 	
