@@ -216,10 +216,9 @@
 			]]></xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexType>
-			
-			<xsd:all>
-				<xsd:element ref="template"></xsd:element>
-			</xsd:all>
+			<xsd:sequence>
+				<xsd:element ref="template" maxOccurs="unbounded"></xsd:element>
+			</xsd:sequence>
 			<xsd:attribute name="overwrite" type="xsd:boolean" default="false">
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
